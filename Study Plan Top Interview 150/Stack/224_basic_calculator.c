@@ -75,7 +75,6 @@ init_stack(&the_stack);
     {
         if(*s == '(' || stack_size(&the_stack)==0)
         {
-            // printf("NEW STACK ENTRY.\n");
             push_onto_stack(&the_stack, 1); // The sign, positive to start with
             push_onto_stack(&the_stack, 0); // Actual value
         }
@@ -92,9 +91,6 @@ init_stack(&the_stack);
             if(!should_add(&the_stack))
                 as_integer = -as_integer;
 
-            // printf("adding value %d\n", as_integer);
-
-
             increment_stack_top(&the_stack, as_integer);
 
             continue;
@@ -108,8 +104,6 @@ init_stack(&the_stack);
             if(!should_add(&the_stack))
                 popped = -popped;
             
-            // printf("popped value from stack: %d\n", popped);
-
             increment_stack_top(&the_stack, popped);
         }
 
