@@ -16,10 +16,8 @@ private:
 
         if(start_idx <= end_idx)
         {
-            // std::cout << "div_anc_conq: start_idx is " << start_idx << " and end_idx is " << end_idx << std::endl;
             int mid_point = start_idx + ((end_idx - start_idx) / 2);
 
-            // std::cout << "mid point is " << mid_point << " and therefore it should be excluded" << std::endl;
             int val = nums[mid_point];
 
             TreeNode *node = new TreeNode();
@@ -35,7 +33,6 @@ private:
                 parent->right = node;
             }
 
-            // std::cout << "divide into.. " << start_idx << "," << mid_point-1 << " and " << mid_point+1 << ", " << end_idx << std::endl;
             div_and_conq(node, nums, start_idx, mid_point-1);
             div_and_conq(node, nums, mid_point+1, end_idx);
         }
