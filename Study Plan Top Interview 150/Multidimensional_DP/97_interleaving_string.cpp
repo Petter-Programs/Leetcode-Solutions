@@ -1,85 +1,47 @@
 class Solution {
 private:
-    std::string make_identifier(std::string& s1, std::string& s2)
-    {
-        return s1 + std::to_string(s1.size()) + s2;
-    }
-private:
-    bool dfs(std::string& s1, std::string& s2, std::string&s3, std::unordered_map<std::string, bool> &cache) {
+    bool dfs(int i1, int i2, std::string const& s1, std::string const& s2, std::string const& s3, std::vector<std::vector<bool>> &unvisited) {
 
-        if(s3.empty())
-        {
+        char s1_next = i1 < s1.size() ? s1[i1] : ' ';
+        char s2_next = i2 < s2.size() ? s2[i2] : ' ';
+
+        if(s1_next == ' ' && s2_next == ' ')
             return true;
-        }
-        
-        char s1_next = !s1.empty() ? s1.back() : ' ';
-        char s2_next = !s2.empty() ? s2.back() : ' ';
-        char s3_next = s3.back();
 
-        if(s1_next == s3_next)
+        char s3_next = s3[i1+i2];
+
+        if(s1_next == s3_next && unvisited[i1+1][i2])
         {
-            s1.pop_back();
-            s3.pop_back();
+            bool success = dfs(i1+1, i2, s1, s2, s3, unvisited);
 
-            std::string const identifier = make_identifier(s1, s2);
-
-            if(!cache.contains(identifier))
-            {
-                bool success = dfs(s1, s2, s3, cache);
-
-                if(success)
-                    return true;
-                
-                // failed path
-                cache[identifier] = false;
-
-            }
-
-            s1.push_back(s1_next);
-            s3.push_back(s3_next);
+            if(success)
+                return true;
         }
 
-        if(s2_next == s3_next)
+        if(s2_next == s3_next && unvisited[i1][i2+1])
         {
-            s2.pop_back();
-            s3.pop_back();
+            bool success = dfs(i1, i2+1, s1, s2, s3, unvisited);
 
-            std::string const identifier = make_identifier(s1, s2);
-
-            if(!cache.contains(identifier))
-            {
-                bool success = dfs(s1, s2, s3, cache);
-
-                if(success)
-                    return true;
-                
-                // failed path
-                cache[identifier] = false;
-
-                s2.push_back(s2_next);
-                s3.push_back(s3_next);
-            }
+            if(success)
+                return true;
         }
 
+        unvisited[i1][i2] = false;
         return false;
 
     }
 public:
     bool isInterleave(string s1, string s2, string s3) {
-
+        
         if(s3.size() != s1.size() + s2.size())
             return false;
         
         if(s3.size() == 0)
             return true;
 
-        std::reverse(s1.begin(), s1.end());
-        std::reverse(s2.begin(), s2.end());
-        std::reverse(s3.begin(), s3.end());
+        std::vector<std::vector<bool>> unvisited(s1.size()+1, std::vector<bool>(s2.size()+1, true));
 
-        std::unordered_map<std::string, bool> cache;
-
-        bool possible = dfs(s1, s2, s3, cache);
+        bool possible = dfs(0, 0, s1, s2, s3, unvisited);
 
         return possible;
     }
